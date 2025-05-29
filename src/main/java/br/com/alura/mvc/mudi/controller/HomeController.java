@@ -5,17 +5,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import br.com.alura.mvc.mudi.model.Pedido;
+import br.com.alura.mvc.mudi.model.StatusPedido;
 import br.com.alura.mvc.mudi.repository.PedidoRepository;
 
 @Controller
+@RequestMapping("/home")
 public class HomeController {
 
 	@Autowired//cria uma instancia de PedidoRepository
 	private PedidoRepository pedidoRepository;
 	
-	@GetMapping("/home")//permite que eu possa escrever localhost:8080/home
+	@GetMapping //("/home")permite que eu possa escrever localhost:8080/home
 	public String home(Model model) {
 		//Pedido pedido = new Pedido();
 		//pedido.setNomeProduto("Notebook Dell Inspiron I15-I120K-A15P");
@@ -29,5 +35,19 @@ public class HomeController {
 		model.addAttribute("pedidos", pedidos);//mandei pra view
 		
 		return "home";
+	}
+
+	@GetMapping("/{status}")//permite que eu possa escrever localhost:8080/home
+	public String porStatus(@PathVariable("status") String status, Model model) {
+		List<Pedido> pedidos = pedidoRepository.findByStatus(StatusPedido.valueOf(status.toUpperCase()));
+		model.addAttribute("pedidos", pedidos);//mandei pra view
+		model.addAttribute("status", status);
+		
+		return "home";
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public String onError(){
+		return "redirect:/home";
 	}
 }

@@ -4,10 +4,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 
 @Entity
 public class Pedido {
@@ -21,8 +22,15 @@ public class Pedido {
 	private String urlProduto;
 	private String urlImagem;
 	private String descricao;
-	
-	
+	@Enumerated(EnumType.STRING)
+	private StatusPedido status;
+
+	public StatusPedido getStatus() {
+		return status;
+	}
+	public void setStatus(StatusPedido status) {
+		this.status = status;
+	}
 	public String getNomeProduto() {
 		return nomeProduto;
 	}
@@ -59,4 +67,4 @@ public class Pedido {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	}
+}
